@@ -1,7 +1,7 @@
 import uuid
 
-from Models.user import User
-from Pages.Registration_page import RegistrationPage
+from models.user import User
+from pages.registration_page import RegistrationPage
 
 VALID_EMAIL = 'aleks_timov@gmail.com'
 VALID_PASSWORD = '1234567$Com'
@@ -20,7 +20,7 @@ def test_registration_success(driver):
     print(random_suffix)
 
     registration_page.open_registration_form()
-    registration_page.fill_email(user.email)
+    registration_page.fill_email(user.username)
     registration_page.fill_password(user.password)
     registration_page.submit_registration()
 
@@ -46,7 +46,7 @@ def test_registration_with_empty_email(driver):
     )
 
     registration_page.open_registration_form()
-    registration_page.fill_email(user.email)
+    registration_page.fill_email(user.username)
     registration_page.fill_password(user.password)
     registration_page.submit_registration()
 
@@ -75,7 +75,7 @@ def test_registration_with_empty_password(driver):
     )
 
     registration_page.open_registration_form()
-    registration_page.fill_email(user.email)
+    registration_page.fill_email(user.username)
     registration_page.fill_password(user.password)
     registration_page.submit_registration()
 
