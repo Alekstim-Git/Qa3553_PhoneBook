@@ -5,7 +5,7 @@ from models.user import User
 fake = Faker()
 
 
-def create_user(username = None, password=None):
+def create_user(username=None, password=None):
     return User(
         username=username if username is not None else fake.unique.email(),
         password=password if password is not None else fake.password(
@@ -13,18 +13,18 @@ def create_user(username = None, password=None):
         )
     )
 
-EXISTING_USER_EMAIL = 'alekstimov@gmail.com'
-EXISTING_USER_PASSWORD = '1234567$Com'
-INVALID_EMAIL = 'alekstimov.com'
-INVALID_PASSWORD = '1234Com'
+EXISTING_USER_EMAIL = "margo@gmail.com"
+EXISTING_USER_PASSWORD = "Mmar123456$"
+INVALID_EMAIL = "margogmail.com"
+INVALID_PASSWORD = "Mmar123"
 
-def existing_user():
+
+def exiting_user():
     return create_user(username=EXISTING_USER_EMAIL, password=EXISTING_USER_PASSWORD)
-
 
 def invalid_email_user():
     return create_user(username=INVALID_EMAIL, password=EXISTING_USER_PASSWORD)
 
-
 def invalid_password_user():
     return create_user(username=EXISTING_USER_EMAIL, password=INVALID_PASSWORD)
+

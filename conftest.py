@@ -1,25 +1,26 @@
 import pytest
 from selenium import webdriver
 
-from data.user_data import existing_user
+from data.user_data import exiting_user
 from pages.login_page import LoginPage
+
 
 
 @pytest.fixture
 def driver():
-    driver= webdriver.Chrome()
+    driver = webdriver.Chrome()
     driver.implicitly_wait(5)
     driver.maximize_window()
-    driver.get('https://telranedu.web.app/')
+    driver.get("https://telranedu.web.app/")
 
     yield driver
-    driver.quit()
 
+    driver.quit()
 
 @pytest.fixture
 def authenticated_driver(driver):
     login_page = LoginPage(driver)
-    user = existing_user()
+    user = exiting_user()
     login_page.open_login_form()
     login_page.fill_email(user.username)
     login_page.fill_password(user.password)

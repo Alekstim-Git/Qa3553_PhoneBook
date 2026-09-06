@@ -11,4 +11,4 @@ print(fake.sentence())
 print(fake.email())
 print(fake.unique.email())
 
-print(fake.numerify(text="05#########"))
+print(fake.numerify(text= "05##########"))
