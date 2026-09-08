@@ -17,6 +17,7 @@ class ContactsPage(BasePage):
     EDIT_ADDRESS_INPUT = (By.CSS_SELECTOR, "input[placeholder='Address']")
     EDIT_DESCRIPTION_INPUT = (By.CSS_SELECTOR, "input[placeholder='desc']")
     EDIT_SAVE_BTN = (By.XPATH, "//button[text()='Save']")
+    REMOVE_BTN = (By.XPATH,"//button[text()='Remove']")
 
     def open_contacts_list(self):
         # Переходит на страницу /contacts по ссылке в навигации и ждёт смены
@@ -64,5 +65,19 @@ class ContactsPage(BasePage):
     def get_edit_contact(self,locator):
         return self.find(locator).get_attribute("value")
 
+    def remove_current_contact(self):
+        self.click(self.REMOVE_BTN)
+        time.sleep(2)
 
+    def open_first_contact(self):
+        cards = self.driver.find_elements(*self.CONTACT_CARDS) #находим все карточки
+        first_card = cards[0] # выбираю первую карточку
+        first_card.click()    # кликаю на неё
 
+    def total_contacts_count(self):
+        return len(self.driver.find_elements(*self.CONTACT_CARDS))
+
+    def remove_all_contacts(self):
+        while self.total_contacts_count() >0:
+            self.open_first_contact()
+            self.remove_current_contact()

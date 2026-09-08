@@ -7,7 +7,6 @@ from pages.registration_page import RegistrationPage
 
 def test_registration_success(driver):
     registration_page = RegistrationPage(driver)
-
     user= create_user()
 
     registration_page.open_registration_form()

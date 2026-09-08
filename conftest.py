@@ -1,7 +1,10 @@
 import pytest
 from selenium import webdriver
 
+from data.contact_data import create_contact
 from data.user_data import exiting_user
+from pages.add_new_contact_page import ContactPage
+from pages.contacts_page import ContactsPage
 from pages.login_page import LoginPage
 
 
@@ -27,3 +30,15 @@ def authenticated_driver(driver):
     login_page.submit_login()
 
     return driver
+
+@pytest.fixture
+def ensure_min_contacts(authenticated_driver):
+    contacts_page = ContactsPage(authenticated_driver)
+    contact_page = ContactPage(authenticated_driver)
+
+    contacts_page.open_contacts_list()
+    while contacts_page.total_contacts_count() <3:
+        contact_page.create_contact_steps(create_contact())
+        contacts_page.open_contacts_list()
+
+    return authenticated_driver

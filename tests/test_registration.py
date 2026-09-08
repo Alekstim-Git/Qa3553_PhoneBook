@@ -1,17 +1,19 @@
 from pages.registration_page import RegistrationPage
+from data.user_data import create_user
 
-VALID_EMAIL = "margo_12346@gmail.com"
-VALID_PASSWORD = "Mmar123456$"
-INVALID_EMAIL = "margo123gmail.com"
-INVALID_PASSWORD = "Mmar123"
+VALID_EMAIL = "alekstimov@gmail.com"
+VALID_PASSWORD = "1234567$Com"
+INVALID_EMAIL = "alekstimov.gmail.com"
+INVALID_PASSWORD = "1234Com"
 
 
 def test_registration_success(driver):
     registration_page = RegistrationPage(driver)
+    user = create_user()
 
     registration_page.open_registration_form()
-    registration_page.fill_email(VALID_EMAIL)
-    registration_page.fill_password(VALID_PASSWORD)
+    registration_page.fill_email(user.username)
+    registration_page.fill_password(user.password)
     registration_page.submit_registration()
 
     assert registration_page.is_registered() is True

@@ -40,7 +40,7 @@ def test_add_contact_success_req_fields(authenticated_driver):
 
 
 PHONE_ALERT_TEXT = "Phone not valid: Phone number must contain only digits! And length min 10, max 15!"
-EMAIL_ALERT_TEXT = "Email not valid: must be a well-formed email address"
+EMAIL_ALERT_TEXT = "Email not valid: должно иметь формат адреса электронной почты"
 
 
 def test_add_contact_empty_name(authenticated_driver):
@@ -54,7 +54,7 @@ def test_add_contact_empty_name(authenticated_driver):
 
     assert contact_page.is_add_button_active()
 
-    contacts_page.open_contact_list()
+    contacts_page.open_contacts_list()
     assert contacts_page.contact_cards_count(contact.phone) == 0
 
 
@@ -72,7 +72,7 @@ def test_add_contact_empty_last_name(authenticated_driver):
 
     assert contact_page.is_add_button_active()
 
-    contacts_page.open_contact_list()
+    contacts_page.open_contacts_list()
     assert contacts_page.contact_cards_count(contact.phone) == 0
 
 
@@ -91,7 +91,7 @@ def test_add_contact_empty_email(authenticated_driver):
 
     assert contact_page.is_add_button_active()
 
-    contacts_page.open_contact_list()
+    contacts_page.open_contacts_list()
     assert contacts_page.contact_cards_count(contact.phone) == 0
 
 
