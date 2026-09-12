@@ -1,10 +1,13 @@
 import time
+import logging
+
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
 from pages.base_page import BasePage
 
+logger = logging.getLogger(__name__)
 
 class ContactsPage(BasePage):
     CONTACTS_NAV_LINK = (By.CSS_SELECTOR, "[href='/contacts']")
@@ -44,17 +47,20 @@ class ContactsPage(BasePage):
         return element.is_displayed()
 
     def open_contact_details(self,phone):
+        logger.info(f"Opening contact details for phone:{phone}")
         locator = (By.XPATH, f"//h3[text()='{phone}']/..")
         self.click(locator)
 
 
     def open_edit_mode(self):
+        logger.info("Opening edit mode")
         self.click(self.EDIT_BTN)
 
     def set_edit_field(self, locator,value):
         self.fill(locator,value)
 
     def submit_edit(self):
+        logger.info("Submiting contact edit")
         self.click(self.EDIT_SAVE_BTN)
         time.sleep(3)
 
@@ -66,6 +72,7 @@ class ContactsPage(BasePage):
         return self.find(locator).get_attribute("value")
 
     def remove_current_contact(self):
+        logger.info("Deleting contact")
         self.click(self.REMOVE_BTN)
         time.sleep(2)
 
@@ -78,6 +85,7 @@ class ContactsPage(BasePage):
         return len(self.driver.find_elements(*self.CONTACT_CARDS))
 
     def remove_all_contacts(self):
+        logger.info("Deleting all contacts")
         while self.total_contacts_count() >0:
             self.open_first_contact()
             self.remove_current_contact()
