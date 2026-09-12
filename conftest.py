@@ -38,6 +38,7 @@ def authenticated_driver(driver):
     login_page.fill_password(user.password)
     login_page.submit_login()
 
+    assert login_page.is_logged(), "Login failed"
     return driver
 
 @pytest.fixture

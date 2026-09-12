@@ -43,7 +43,7 @@ class ContactsPage(BasePage):
         # чтобы убедиться, что он реально появился в списке.
         locator = (By.XPATH, f"//h3[text()='{phone}']")
         element = WebDriverWait(self.driver, 5).until(
-            EC.presence_of_element_located(locator))
+            EC.visibility_of_element_located(locator))
         return element.is_displayed()
 
     def open_contact_details(self,phone):

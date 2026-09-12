@@ -219,7 +219,7 @@ def test_edit_contact_duplicate_phone_negative(authenticated_driver):
     contacts_page.submit_edit()
     assert contacts_page.contact_cards_count(existing_contact.phone) == 1
 
-@pytest.mark.skip
+@pytest.mark.skip(reason="BUG-125: Duplicate email")
 def test_edit_contact_duplicate_email_negative(authenticated_driver):
     contact_page = ContactPage(authenticated_driver)
     contacts_page = ContactsPage(authenticated_driver)
@@ -235,6 +235,6 @@ def test_edit_contact_duplicate_email_negative(authenticated_driver):
     contacts_page.set_edit_field(contacts_page.EDIT_EMAIL_INPUT, existing_contact.email)
     contacts_page.submit_edit()
 
-    contacts_page.open_contact_details(other_contact)
+    contacts_page.open_contact_details(other_contact.phone)
     contacts_page.open_edit_mode()
     assert contacts_page.get_edit_contact(contacts_page.EDIT_EMAIL_INPUT) == other_contact.email
