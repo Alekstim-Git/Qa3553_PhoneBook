@@ -13,7 +13,7 @@ configure_logging()
 logger = logging.getLogger(__name__)
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def driver():
     logger.info("Starting browser session")
     driver = webdriver.Chrome()
@@ -26,7 +26,7 @@ def driver():
     logger.info("Closing browser session")
     driver.quit()
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def authenticated_driver(driver):
     login_page = LoginPage(driver)
     user = exiting_user()
