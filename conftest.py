@@ -32,38 +32,6 @@ def driver():
     logger.info("Closing browser session")
     driver.quit()
 
-@pytest.fixture(scope="function")
-def authenticated_driver(driver):
-    login_page = LoginPage(driver)
-    user = existing_user()
-
-    logger.info(f"Logging in user: {user.username}")
-
-    login_page.open_login_form()
-    login_page.fill_email(user.username)
-    login_page.fill_password(user.password)
-    login_page.submit_login()
-
-    assert login_page.is_logged(), "Login failed"
-    return driver
-
-@pytest.fixture
-def ensure_min_contacts(authenticated_driver):
-    contacts_page = ContactsPage(authenticated_driver)
-    contact_page = ContactPage(authenticated_driver)
-
-    contacts_page.open_contacts_list()
-    count = contacts_page.total_contacts_count()
-    if count<3:
-        logger.warning(f"Contact list has {count} contacts(<3), creating test data")
-
-    while contacts_page.total_contacts_count() <3:
-        contact_page.create_contact_steps(create_contact())
-        contacts_page.open_contacts_list()
-
-    return authenticated_driver
-
-
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     outcome = yield
@@ -94,3 +62,35 @@ def save_screenshot_on_failure(request, driver):
             logger.warning("Screenshot was not saved: %s", screenshot_path)
     except Exception:
         logger.exception("Could not save screenshot for %s", request.node.nodeid)
+
+
+@pytest.fixture(scope="function")
+def authenticated_driver(driver):
+    login_page = LoginPage(driver)
+    user = existing_user()
+
+    logger.info(f"Logging in user: {user.username}")
+
+    login_page.open_login_form()
+    login_page.fill_email(user.username)
+    login_page.fill_password(user.password)
+    login_page.submit_login()
+
+    assert login_page.is_logged(), "Login failed"
+    return driver
+
+@pytest.fixture
+def ensure_min_contacts(authenticated_driver):
+    contacts_page = ContactsPage(authenticated_driver)
+    contact_page = ContactPage(authenticated_driver)
+
+    contacts_page.open_contacts_list()
+    count = contacts_page.total_contacts_count()
+    if count<3:
+        logger.warning(f"Contact list has {count} contacts(<3), creating test data")
+
+    while contacts_page.total_contacts_count() <3:
+        contact_page.create_contact_steps(create_contact())
+        contacts_page.open_contacts_list()
+
+    return authenticated_driver
