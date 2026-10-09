@@ -3,6 +3,7 @@ import re
 from datetime import datetime
 from pathlib import Path
 import pytest
+import allure
 from selenium import webdriver
 from selenium.webdriver.support.event_firing_webdriver import EventFiringWebDriver
 
@@ -11,6 +12,7 @@ from data.user_data import existing_user
 from pages.add_new_contact_page import ContactPage
 from pages.contacts_page import ContactsPage
 from pages.login_page import LoginPage
+from utils.config import BASE_URL
 from utils.logger_config import configure_logging
 from utils.selenium_listener import SeleniumEventListener
 
@@ -25,7 +27,7 @@ def driver():
     driver = webdriver.Chrome()
     driver.implicitly_wait(5)
     driver.maximize_window()
-    driver.get("https://telranedu.web.app/")
+    driver.get(BASE_URL)
 
     yield EventFiringWebDriver(driver, SeleniumEventListener())
 
@@ -43,25 +45,29 @@ def pytest_runtest_makereport(item, call):
 def save_screenshot_on_failure(request, driver):
     yield
 
-    setup_report = getattr(request.node, "rep_setup", None)
+    setup_report = getattr(request.node,"rep_setup",None)
     call_report = getattr(request.node, "rep_call", None)
-    failed = ((setup_report and setup_report.failed)
-              or (call_report and call_report.failed))
+    failed = (setup_report and setup_report.failed) or(call_report and call_report.failed)
+
     if not failed:
+
         return
 
+    SCREENSHOTS_DIR.mkdir(exist_ok=True)
+
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    safe_test_name = re.sub(r'[<>:"/\\|?*]', "_", request.node.name)
+    filename = f"{safe_test_name}_{timestamp}.png"
+    screenshot_path = SCREENSHOTS_DIR / filename
+
     logger.error("Test failed: %s", request.node.nodeid)
-    try:
-        SCREENSHOTS_DIR.mkdir(exist_ok=True)
-        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S_%f")
-        safe_test_name = re.sub(r'[<>:"/\\|?*]', "_", request.node.name)
-        screenshot_path = SCREENSHOTS_DIR / f"{safe_test_name}_{timestamp}.png"
-        if driver.save_screenshot(str(screenshot_path)):
-            logger.info("Screenshot saved: %s", screenshot_path)
-        else:
-            logger.warning("Screenshot was not saved: %s", screenshot_path)
-    except Exception:
-        logger.exception("Could not save screenshot for %s", request.node.nodeid)
+    if driver.save_screenshot(str(screenshot_path)):
+        logger.info("Screenshot saved: %s", screenshot_path)
+        allure.attach.file(
+            str(screenshot_path),
+            name = "screenshot",
+            attachment_type=allure.attachment_type.PNG
+        )
 
 
 @pytest.fixture(scope="function")

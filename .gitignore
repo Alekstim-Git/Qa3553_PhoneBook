@@ -221,3 +221,7 @@ __marimo__/
 
 # Browser failure screenshots
 /screenshots/
+
+/allure-results/
+
+/allure-report/

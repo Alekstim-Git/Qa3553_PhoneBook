@@ -1,4 +1,5 @@
 import logging
+import allure
 
 import pytest
 
@@ -10,6 +11,11 @@ logger = logging.getLogger(__name__)
 
 @pytest.mark.smoke
 @pytest.mark.regression
+@allure.feature("Login")
+@allure.story("Login success")
+@allure.title("Logging of user with valid data")
+@allure.description("User with valid data log in the system. Fill fields email and password and click on button [login] ")
+@allure.severity(allure.severity_level.CRITICAL)
 def test_login_success(driver):
     login_page = LoginPage(driver)
     user = existing_user()
@@ -26,6 +32,7 @@ def test_login_success(driver):
 
 @pytest.mark.regression
 @pytest.mark.parametrize("user_factory",INVALID_LOGIN_USERS)
+@allure.title("Logging of user with invalid data")
 def test_login_rejected(driver,user_factory):
     login_page = LoginPage(driver)
     user = user_factory()

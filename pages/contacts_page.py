@@ -23,11 +23,12 @@ class ContactsPage(BasePage):
     REMOVE_BTN = (By.XPATH,"//button[text()='Remove']")
 
     def open_contacts_list(self):
-        # Переходит на страницу /contacts по ссылке в навигации и ждёт смены
-        # URL плюс небольшую паузу, чтобы список карточек успел отрисоваться
+        # Переходит на страницу /contacts по ссылке в навигации и ждёт нужный URL и
+        # плюс небольшую паузу, чтобы список карточек успел отрисоваться.
         self.click(self.CONTACTS_NAV_LINK)
-        WebDriverWait(self.driver, 5).until(EC.url_contains("/contacts"))
-        time.sleep(1)
+        # WebDriverWait(self.driver, 5).until(EC.url_contains("/contacts"))
+        # time.sleep(1)
+        self.wait_until_url_matches(r"/contacts$")
 
     def contact_cards_count(self, phone):
         # Считает, сколько карточек контактов с данным телефоном сейчас
@@ -42,9 +43,7 @@ class ContactsPage(BasePage):
         # видима на странице — используется сразу после сохранения контакта,
         # чтобы убедиться, что он реально появился в списке.
         locator = (By.XPATH, f"//h3[text()='{phone}']")
-        element = WebDriverWait(self.driver, 5).until(
-            EC.visibility_of_element_located(locator))
-        return element.is_displayed()
+        return self.wait_until_visible(locator).is_displayed()
 
     def open_contact_details(self,phone):
         logger.info(f"Opening contact details for phone:{phone}")
@@ -74,6 +73,7 @@ class ContactsPage(BasePage):
     def remove_current_contact(self):
         logger.info("Deleting contact")
         self.click(self.REMOVE_BTN)
+        self.wait_until_url_matches(r"/contacts$")
         time.sleep(2)
 
     def open_first_contact(self):

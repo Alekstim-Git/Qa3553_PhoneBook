@@ -12,21 +12,33 @@ class BasePage:
 
     def click(self, locator):
         logger.debug(f"Click on {locator}")
-        element = WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable(locator))
-        element.click()
+        self.wait_until_clicable(locator).click()
 
     def fill(self, locator, value):
         logger.debug(f"Fill{locator}with{value}")
-        element = WebDriverWait(self.driver, 5).until(EC.visibility_of_element_located(locator))
+        element = self.wait_until_visible(locator)
         element.clear()
         element.send_keys(value)
 
-    def get_alert_text(self):
-        alert = WebDriverWait(self.driver,timeout=5).until(
-            EC.alert_is_present()
-        )
+        # self.find(locator).clear()
+        # self.find(locator).send_keys(value)
 
-        return alert.text
+    def get_alert_text(self):
+        # alert = WebDriverWait(self.driver, timeout=5).until(
+        #     EC.alert_is_present())
+        return self.wait_until_alert_present().text
 
     def accept_alert(self):
         self.driver.switch_to.alert.accept()
+
+    def wait_until_visible(self, locator, timeout=5):
+        return WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
+
+    def wait_until_clicable(self, locator, timeout=5):
+        return WebDriverWait(self.driver, timeout).until(EC.element_to_be_clickable(locator))
+
+    def wait_until_url_matches(self, locator, timeout=5):
+        return WebDriverWait(self.driver, timeout).until(EC.url_matches(locator))
+
+    def wait_until_alert_present(self, timeout=5):
+        return WebDriverWait(self.driver, timeout).until(EC.alert_is_present())
