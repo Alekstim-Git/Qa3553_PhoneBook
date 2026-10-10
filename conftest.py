@@ -21,10 +21,44 @@ logger = logging.getLogger(__name__)
 SCREENSHOTS_DIR = Path(__file__).resolve().parent / "screenshots"
 
 
+def pytest_addoption(parser):
+    parser.addoption(
+        "--browser",
+        action="store",
+        default="chrome",
+        choices=["chrome", "firefox","edge"],
+        help="Browser to run tests in: chrome or firefox")
+
+    parser.addoption(
+        "--headless",
+        action = "store_true",
+        help="Run the browser without a visible window"
+    )
+
+
 @pytest.fixture(scope="function")
-def driver():
+def driver(request):
+    browser = request.config.getoption("--browser")
+    headless = request.config.getoption("--headless")
+
     logger.info("Starting browser session")
-    driver = webdriver.Chrome()
+
+    if browser =="chrome":
+        options = webdriver.ChromeOptions()
+        if headless:
+            options.add_argument("--headless=new")
+        driver = webdriver.Chrome(options=options)
+    elif browser=="firefox":
+        options = webdriver.FirefoxOptions()
+        if headless:
+            options.add_argument("--headless")
+        driver = webdriver.Firefox(options=options)
+    elif browser == "edge":
+        driver = webdriver.Edge()
+    else:
+        raise ValueError(f"Unsupported browser:{browser}")
+
+
     driver.implicitly_wait(5)
     driver.maximize_window()
     driver.get(BASE_URL)
@@ -33,6 +67,7 @@ def driver():
 
     logger.info("Closing browser session")
     driver.quit()
+
 
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
