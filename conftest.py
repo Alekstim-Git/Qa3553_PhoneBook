@@ -138,3 +138,9 @@ def ensure_min_contacts(authenticated_driver):
         contacts_page.open_contacts_list()
 
     return authenticated_driver
+
+@pytest.fixture(autouse=True)
+def add_browser_to_allure(request):
+    browser_name = request.config.getoption("--browser")
+    if browser_name:
+        allure.dynamic.parameter("Browser", browser_name)
